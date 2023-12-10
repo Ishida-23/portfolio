@@ -1,0 +1,44 @@
+html {
+    font-size: 16px;
+    font-family: sans-serif;
+    /* background-color: #00AEEF; */
+}
+* {
+    box-sizing:border-box;
+}
+body {
+    margin: 0 0 0 0 ;
+    background-color: #fff;
+}
+p{
+    line-height:1.7;
+}
+header{
+    background-color: #00AEEF;
+    display: flex;
+    width: 100%;
+    height: 100px;
+    align-items: center;
+    margin-bottom: 10px;
+    display: flex;
+  }
+nav {
+    list-style: none;
+    display: flex;
+    padding-right: 10px;
+    margin: 10px;
+}
+main {
+    max-width: 1000px;
+    margin: 0px auto 90px auto; /* auto は自動調節*/
+    
+}
+.answer , .question{
+    border: 1px solid #000000;
+    margin-bottom: 10px;
+    padding: 5px;
+    margin-top: 0px;
+}
+.button{
+    display: flex;
+}
