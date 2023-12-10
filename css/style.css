@@ -42,3 +42,12 @@ main {
 .button{
     display: flex;
 }
+
+input[type="text"],input[type="password"],input[type="textarea"]{
+    width: 100%;
+    padding: 6px;
+    font-size: 1rem;
+  }
+  input[type="textarea"]{
+    height: 140px;
+  }

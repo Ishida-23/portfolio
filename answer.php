@@ -2,6 +2,7 @@
 <!-- 外部ファイル読み込み --><?php require_once dirname(__FILE__) . "/chat_function.php"; ?>
 <?php
 $err="";
+
 session_start();// セッションの開始
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){
@@ -23,9 +24,9 @@ if(!isset($_SESSION["loginflg"])){
 $statement;
 try{
     // DBに接続
-    $pdo=Connect();
+    $pdo= Connect();
     // クエリの準備
-    $sql="SELECT name,question,date,question.id FROM question
+    $sql= "SELECT name,question,date,question.id FROM question
         LEFT JOIN user ON question.userId = user.id
         WHERE question.id = :p_name";
     // ステートメントの準備
@@ -35,23 +36,25 @@ try{
     // 実行
     $statement->execute();
 }catch(PDOExcetion $ex){   
-    $mes  =  "<p>DB接続に失敗しました。<br>";
-    $mes .="システム管理者へ連絡してください。</p>";
+    $err  =  "<p>DB接続に失敗しました。<br>";
+    $err .="システム管理者へ連絡してください。</p>";
 }
 
 $userId=Login();
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     // POST情報からログイン確認
     if(isset($_POST["answer"])){
+    if(!$_POST["text"]==""){
         try{
-            $ans=htmlspecialchars($_POST["text"],ENT_QUOTES | ENT_HTML5);
-            $date=date("YmdHis");
-            $pdo= Connect();
-            $sql="INSERT INTO answer";
-            $sql.="(questionId,userId,answer,date)";
-            $sql.="VALUES";
-            $sql.="(:questionId,:userId,:answer,:date)";
-            $answer=$pdo->prepare($sql);
+            $ans = preg_replace("/\s|　/", "", $_POST["text"]); //すべての空白除去
+            $ans = htmlspecialchars($ans,ENT_QUOTES | ENT_HTML5);
+            $date= date("YmdHis");
+            $pdo = Connect();
+            $sql = "INSERT INTO answer";
+            $sql.= "(questionId,userId,answer,date)";
+            $sql.= "VALUES";
+            $sql.= "(:questionId,:userId,:answer,:date)";
+            $answer= $pdo->prepare($sql);
             $answer->bindValue(":questionId", $_GET["questionId"] ,PDO::PARAM_INT);
             $answer->bindValue(":userId", $userId ,PDO::PARAM_INT);
             $answer->bindValue(":answer", $ans ,PDO::PARAM_STR);
@@ -62,9 +65,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         }catch(PDOException $ex){
             $err= "接続に失敗しました。";
         }
+    }else{
+        $err="コメントを入力してください。";
     }
 } 
-
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -84,29 +89,33 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     
     <main>
     <h2>質問</h2>
-    <div>
+    <div class="answer">
     <p>
         <?php
             if(isset($statement)) {
                 $question= $statement->fetch(PDO::FETCH_ASSOC);
-                $questionId =$question["id"];
+                $questionId = $question["id"];
                 $questionQuestion = htmlspecialchars($question["question"],ENT_QUOTES | ENT_HTML5);
-                echo $question["name"]."<br>";
-                echo $questionQuestion."<br>";
-                echo $question["date"]."<br>";
             }
         ?>
+        <?= $question["name"] ?><br>
+        <?= $questionQuestion ?><br>
+        <?= $question["date"] ?><br>
     </p>
     </div>
 
     <h2>回答を投稿する</h2>
     <div>
-        <form action="<?php $_SERVER["PHP_SELF"]?>" method="POST">
-            <input type="textarea" name="text" value="" maxlenght="256">
-            <input type="submit"name="answer" value="投稿">
+        <form action= "<?php $_SERVER["PHP_SELF"] ?>" method ="POST">
+            <input type= "textarea" name= "text" value="" maxlenght ="256">
+            <input type= "submit"name= "answer" value="投稿">
         </form>
     </div>
-    <p><?=$err?></p>
+    <p><?= $err ?></p>
+    <form action="detail.php" method="GET">
+                <input type= "hidden" name= "questionId" value= "<?= $questionId ?> ">
+                <input type="submit" value="戻る">
+            </form>
     </main>
 </body>
 </html>

@@ -41,12 +41,12 @@ try{
 <body>
     
     <header>
-        <h1><a href="question.php">チャットアプリ</a></h1>
+        <h1><a href= "question.php">チャットアプリ</a></h1>
         <nav>
             <?php require_once dirname(__FILE__) . "/header.php"; ?><!-- 外部ファイル読み込み -->
-            <form action="questionInput.php" method="GET">
-                <input type="hidden"name="page" value="questionInput.php">
-                <input type="submit"  value="質問を投稿する">
+            <form action= "questionInput.php" method= "GET">
+                <input type= "hidden" name= "page" value= "questionInput.php">
+                <input type= "submit"  value= "質問を投稿する">
             </form>
         </nav>
 </header>
@@ -54,26 +54,26 @@ try{
     <?php
         // PDO::FETCH_ASSOCはDBから該当したカラム名のみ取得
         while($question = $statement ->fetch(PDO::FETCH_ASSOC)){
-            $questionId=$question["id"];
-            $question_text=htmlspecialchars($question["question"],ENT_QUOTES | ENT_HTML5);
+            $questionId= $question["id"];
+            $question_text= htmlspecialchars($question["question"],ENT_QUOTES | ENT_HTML5);
         ?>  
-            <div class="question">
+            <div class= "question">
             <p>
-                <?=$question["name"]?><br>
-                <?=$question_text?><br>
-                <?=$question["date"]?><br>
+                <?= $question["name"] ?><br>
+                <?= $question_text ?><br>
+                <?= $question["date"] ?><br>
             </p>
-                <div class="button">
-                    <form action="detail.php" method="GET">
-                        <input type="hidden" name="questionId" value="<?=$questionId?>">
-                        <input type="submit" name="" value="詳細">
+                <div class= "button">
+                    <form action= "detail.php" method= "GET">
+                        <input type= "hidden" name= "questionId" value= "<?= $questionId?> ">
+                        <input type= "submit" name="" value= "詳細">
                     </form>
     
              <!-- 本人のみ削除 -->
     <?php       if(Login() == $question["userId"]){ ?>
-                    <form action="<?=$_SERVER['PHP_SELF']?>" method='POST'>
-                        <input type="hidden" name="questionId" value="<?=$questionId?>">
-                        <input type="submit" name="delete" value="削除">
+                    <form action= "<?= $_SERVER['PHP_SELF'] ?>" method= 'POST'>
+                        <input type= "hidden" name= "questionId" value= "<?= $questionId ?> ">
+                        <input type= "submit" name= "delete" value= "削除">
                     </form>
             
 
@@ -83,7 +83,7 @@ try{
         echo "</div>";
         }
     ?>
-    <p><?=$err?></p>
+    <p><?= $err ?></p>
 
     </main>
 </body>

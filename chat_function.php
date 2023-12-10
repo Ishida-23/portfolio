@@ -1,5 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php
+date_default_timezone_set('Asia/Tokyo'); //日本のタイムゾーンに設定
+
 // DB接続
 function Connect():PDO{
     $pdo= new PDO(
@@ -22,15 +24,15 @@ function Login(){
     if(isset($_SESSION["userId"]) && isset($_SESSION["userPw"])){
         try{
             $pdo= Connect();
-            $sql="SELECT id FROM user WHERE loginId= :id";
-            $login=$pdo->prepare($sql);
+            $sql= "SELECT id FROM user WHERE loginId= :id";
+            $login= $pdo->prepare($sql);
             $login->bindValue(":id",$_SESSION["userId"],PDO::PARAM_INT);
             $login->execute();
         }catch(PDOException $ex){
             $err= "接続に失敗しました。";
         }
         $id = $login->fetch(PDO::FETCH_ASSOC);
-        $userId=$id["id"];
+        $userId= $id["id"];
         return $userId;
     }else{
         $err="ログインできていません。";
@@ -69,8 +71,8 @@ function Delete_question(){
     try{
         $pdo= Connect();
         // 確認していない
-        $sql="UPDATE question SET deleteflg = 1 WHERE id = :questionId ";
-        $delete=$pdo->prepare($sql);
+        $sql= "UPDATE question SET deleteflg = 1 WHERE id = :questionId ";
+        $delete= $pdo->prepare($sql);
         $delete->bindValue(":questionId",$_POST["questionId"],PDO::PARAM_INT);
         $delete->execute();
         }catch(PDOException $ex){
@@ -81,8 +83,8 @@ function Delete_question(){
 function Delete_answer(){
     try{
         $pdo= Connect();
-        $sql="UPDATE answer SET deleteFlg = 1 WHERE id = :answerId";
-        $delete=$pdo->prepare($sql);
+        $sql= "UPDATE answer SET deleteFlg = 1 WHERE id = :answerId";
+        $delete= $pdo->prepare($sql);
         $delete->bindValue(":answerId",$_POST["answerId"],PDO::PARAM_INT);
         $delete->execute();
         }catch(PDOException $ex){

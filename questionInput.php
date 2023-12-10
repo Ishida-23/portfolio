@@ -2,6 +2,7 @@
 <?php require_once dirname(__FILE__) . "/chat_function.php"; ?><!-- 外部ファイル読み込み -->
 <?php
 session_start();// セッションの開始
+$err="";
 if(isset($_POST["logout"])){
     Logout();
     header("Location:question.php",true,307);
@@ -16,14 +17,18 @@ $userId=Login();
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     // POST確認
     if(isset($_POST["register"])){
+        if(!$_POST["text"]==""){
         try{
-            $question=htmlspecialchars($_POST["text"],ENT_QUOTES | ENT_HTML5);
+            $question = preg_replace("/\s|　/", "", $_POST["text"]); //すべての空白除去
+            $question=htmlspecialchars($question,ENT_QUOTES | ENT_HTML5);
             $date=date("YmdHis");
+
             $pdo= Connect();
             $sql="INSERT INTO question";
             $sql.="(userId,question,date)";
             $sql.="VALUES";
             $sql.="(:userId,:question,:date)";
+
             $statement=$pdo->prepare($sql);
             $statement->bindValue(":userId", $userId ,PDO::PARAM_INT);
             $statement->bindValue(":question", $question ,PDO::PARAM_STR);
@@ -39,6 +44,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         }catch(PDOException $ex){
             $err= "接続に失敗しました。";
         }
+    }else{
+        $err="コメントを入力してください。";
+    }
     }
 }        
 ?>
@@ -63,6 +71,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             <input type="textarea" name="text" value="" maxlenght="256">
             <input type="submit"name="register" value="登録">
         </form>
+        <p><?= $err ?></p>
+        <form action= "index.php" method= "GET">
+            <input type= "submit" value= "戻る">
+        </form>
+
     </main>
 </body>
 </html>
