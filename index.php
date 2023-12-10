@@ -66,11 +66,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 </head>
 
 <body>
-    <header>
+    <header> <!--ヘッダー　-->
         <h1><a href="question.php">チャットアプリ</a></h1>
-    </header>
+    </header> <!--ヘッダーここまで　-->
 
-    <main>
+    <main> <!--メイン　-->
         <h2>ログイン</h2>
         
         <form action="<?php $_SERVER["PHP_SELF"]?>" method="POST">
@@ -86,6 +86,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             <input type="submit" name="" value="新規登録">
         </form>
         
-    </main>
+    </main> <!--メインここまで　-->
 </body>
 </html>

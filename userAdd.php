@@ -62,11 +62,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 <body>
 
-    <header>
+    <header> <!--ヘッダー　-->
         <h1><a href="question.php">チャットアプリ</a></h1>
-    </header>
+    </header> <!--ヘッダーここまで　-->
 
-    <main>
+    <main> <!--メイン　-->
         <form action="userAdd.php" method="POST">
             <p>表示名:<input type= "text" name= "viewName"  maxlength= "10" value="" placeholder="最大10文字まで"></p>
             <p>ユーザーID:<input type= "text" name= "userId" maxlength= "10" value="" placeholder="6～10文字で登録してください。"></p>
@@ -78,6 +78,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <form action= "index.php" method= "GET">
             <input type= "submit" value= "戻る">
         </form>
-    </main>
+    </main> <!--メインここまで　-->
 </body>
 </html>

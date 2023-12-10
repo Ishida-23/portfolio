@@ -44,78 +44,77 @@ $userId=Login();
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     // POST情報からログイン確認
     if(isset($_POST["answer"])){
-    if(!$_POST["text"]==""){
-        try{
-            $ans = preg_replace("/\s|　/", "", $_POST["text"]); //すべての空白除去
-            $ans = htmlspecialchars($ans,ENT_QUOTES | ENT_HTML5);
-            $date= date("YmdHis");
-            $pdo = Connect();
-            $sql = "INSERT INTO answer";
-            $sql.= "(questionId,userId,answer,date)";
-            $sql.= "VALUES";
-            $sql.= "(:questionId,:userId,:answer,:date)";
-            $answer= $pdo->prepare($sql);
-            $answer->bindValue(":questionId", $_GET["questionId"] ,PDO::PARAM_INT);
-            $answer->bindValue(":userId", $userId ,PDO::PARAM_INT);
-            $answer->bindValue(":answer", $ans ,PDO::PARAM_STR);
-            $answer->bindValue(":date", $date ,PDO::PARAM_INT);
-            $answer->execute();
-            header("Location:question.php",true,307);
-            exit;
-        }catch(PDOException $ex){
-            $err= "接続に失敗しました。";
+        if(!$_POST["text"]==""){
+            try{
+                $ans = preg_replace("/\s|　/", "", $_POST["text"]); //すべての空白除去
+                $ans = htmlspecialchars($ans,ENT_QUOTES | ENT_HTML5);
+                $date= date("YmdHis");
+                $pdo = Connect();
+                $sql = "INSERT INTO answer";
+                $sql.= "(questionId,userId,answer,date)";
+                $sql.= "VALUES";
+                $sql.= "(:questionId,:userId,:answer,:date)";
+                $answer= $pdo->prepare($sql);
+                $answer->bindValue(":questionId", $_GET["questionId"] ,PDO::PARAM_INT);
+                $answer->bindValue(":userId", $userId ,PDO::PARAM_INT);
+                $answer->bindValue(":answer", $ans ,PDO::PARAM_STR);
+                $answer->bindValue(":date", $date ,PDO::PARAM_INT);
+                $answer->execute();
+                header("Location:question.php",true,307);
+                exit;
+            }catch(PDOException $ex){
+                $err= "接続に失敗しました。";
+            }
+        }else{
+            $err="コメントを入力してください。";
         }
-    }else{
-        $err="コメントを入力してください。";
-    }
-} 
+    } 
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>質問を投稿</title>
-    
 </head>
 
 <body>
-    <header>
+    <header> <!--ヘッダー　-->
         <h1><a href="question.php">チャットアプリ</a></h1>
         <?php require_once dirname(__FILE__) . "/header.php"; ?><!-- 外部ファイル読み込み -->
         <link rel="stylesheet" href="css/style.css"><!-- 外部ファイル読み込み -->
-    </header>
+    </header> <!--ヘッダーここまで　-->
     
-    <main>
-    <h2>質問</h2>
-    <div class="answer">
-    <p>
-        <?php
+    <main> <!--メイン　-->
+        <h2>質問</h2>
+        <div class="answer">
+            <?php
             if(isset($statement)) {
                 $question= $statement->fetch(PDO::FETCH_ASSOC);
                 $questionId = $question["id"];
                 $questionQuestion = htmlspecialchars($question["question"],ENT_QUOTES | ENT_HTML5);
             }
-        ?>
-        <?= $question["name"] ?><br>
-        <?= $questionQuestion ?><br>
-        <?= $question["date"] ?><br>
-    </p>
-    </div>
+            ?>
+            <p>
+                <?= $question["name"] ?><br>
+                <?= $questionQuestion ?><br>
+                <?= $question["date"] ?><br>
+            </p>
+        </div>
 
-    <h2>回答を投稿する</h2>
-    <div>
+        <h2>回答を投稿する</h2>
         <form action= "<?php $_SERVER["PHP_SELF"] ?>" method ="POST">
             <input type= "textarea" name= "text" value="" maxlenght ="256">
             <input type= "submit"name= "answer" value="投稿">
         </form>
-    </div>
-    <p><?= $err ?></p>
-    <form action="detail.php" method="GET">
+    
+        <p><?= $err ?></p>
+        <form action="detail.php" method="GET">
                 <input type= "hidden" name= "questionId" value= "<?= $questionId ?> ">
                 <input type="submit" value="戻る">
-            </form>
-    </main>
+        </form>
+    </main> <!--メインここまで　-->
 </body>
 </html>

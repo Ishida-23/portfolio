@@ -45,32 +45,10 @@ function Logout(){
     session_destroy();
 }
 
-// 遷移先
-function Redirect(){
-    if(isset($_GET["page"]) && isset($_GET["questionId"])){
-        header("Location:" .$_GET['page']. "?questionId=" .$_GET["questionId"],true,307); //answer.php
-        exit;
-    }elseif(isset($_GET["page"])){
-        header('Location:' .$_GET['page'],true,307);//question.php
-        exit;
-    }else{
-        header("Location:question.php",true,307);//通常ログイン時
-        exit;
-    }
-}
-// ログイン判定
-function Loginflg(){
-    if(isset($_SESSION["loginflg"])){
-        header("Location:question.php",true,307);
-        exit;
-    }
-}
-
 // 削除操作 
 function Delete_question(){
     try{
         $pdo= Connect();
-        // 確認していない
         $sql= "UPDATE question SET deleteflg = 1 WHERE id = :questionId ";
         $delete= $pdo->prepare($sql);
         $delete->bindValue(":questionId",$_POST["questionId"],PDO::PARAM_INT);
