@@ -63,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                 header("Location:question.php",true,307);
                 exit;
             }catch(PDOException $ex){
-                $err= "接続に失敗しました。";
+                $err= "投稿に失敗しました。";
             }
         }else{
             $err="コメントを入力してください。";
